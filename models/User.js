@@ -7,10 +7,16 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      minlength: 3,
+      minlength: 3
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user'
     },
     hashedPassword: {
       type: String,
+      minlength: 3,
       required: true
     },
   },
@@ -23,4 +29,9 @@ userSchema.set('toJSON', {
     }
 });
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
+
+const User = mongoose.model('User', userSchema);
+module.exports = User;
