@@ -7,6 +7,7 @@ const cors = require('cors');
 const logger = require('morgan');
 const authRouter = require('./controllers/auth.routes');
 const gameRouter = require('./controllers/game.routes');
+const reviewRouter = require('./controllers/review.routes');
 
 
 mongoose.connect(process.env.MONGODB_URI);
@@ -22,6 +23,7 @@ app.use(logger('dev'));
 // Routes go here
 app.use('/users', authRouter);
 app.use('/games', gameRouter);
+app.use('/games', reviewRouter);
 
 app.listen(3000, () => {
   console.log('The express app is ready!');
