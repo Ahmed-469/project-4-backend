@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
     res.json(games)
   }
   catch (err) {
-    res.status(500).json(err)
+    res.status(500).json({ message: err.message })
   }
 })
 
@@ -18,9 +18,7 @@ router.get("/:gameId", async (req, res) => {
   try {
     const game = await Game.findById(req.params.gameId).populate("author")
 
-    if (!game) {
-      return res.status(404).json({ message: "Game not found" })
-    }
+    if (!game) return res.status(404).json({ message: "Game not found" })
 
     res.json(game)
   }
@@ -42,18 +40,16 @@ router.post("/", verifyToken, async (req, res) => {
     res.status(201).json(game)
   }
   catch (err) {
-    res.status(500).json(err)
+    res.status(500).json({ message: err.message })
   }
 })
 
-// UPDATE game (owner only)
+// UPDATE game
 router.put("/:gameId", verifyToken, async (req, res) => {
   try {
     const game = await Game.findById(req.params.gameId)
 
-    if (!game) {
-      return res.status(404).json({ message: "Game not found" })
-    }
+    if (!game) return res.status(404).json({ message: "Game not found" })
 
     if (game.author.toString() !== req.user._id) {
       return res.status(403).json({ message: "Not your game" })
@@ -66,20 +62,18 @@ router.put("/:gameId", verifyToken, async (req, res) => {
     )
 
     res.json(updated)
-  }
+  } 
   catch (err) {
-    res.status(500).json(err)
+    res.status(500).json({ message: err.message })
   }
 })
 
-// DELETE game (owner only)
+// DELETE game
 router.delete("/:gameId", verifyToken, async (req, res) => {
   try {
     const game = await Game.findById(req.params.gameId)
 
-    if (!game) {
-      return res.status(404).json({ message: "Game not found" })
-    }
+    if (!game) return res.status(404).json({ message: "Game not found" })
 
     if (game.author.toString() !== req.user._id) {
       return res.status(403).json({ message: "Not your game" })
@@ -90,7 +84,7 @@ router.delete("/:gameId", verifyToken, async (req, res) => {
     res.json({ message: "Game deleted" })
   }
   catch (err) {
-    res.status(500).json(err)
+    res.status(500).json({ message: err.message })
   }
 })
 
