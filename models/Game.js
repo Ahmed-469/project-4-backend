@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -23,7 +23,7 @@ const reviewSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
 const gameSchema = new mongoose.Schema(
   {
@@ -59,8 +59,8 @@ const gameSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
-const Game = mongoose.model("Game", gameSchema)
+const Game = mongoose.model("Game", gameSchema);
 
-export default Game
+module.exports = Game;
