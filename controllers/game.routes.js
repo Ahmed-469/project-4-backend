@@ -9,14 +9,14 @@ router.get("/", async (req, res) => {
     res.json(games)
   }
   catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(500).json(err)
   }
 })
 
 // GET single game
 router.get("/:gameId", async (req, res) => {
   try {
-    const game = await Game.findById(req.params.gameId).populate("author")
+    const game = await Game.findById(req.params.gameId).populate("reviews.author", "username")
 
     if (!game) return res.status(404).json({ message: "Game not found" })
 
@@ -47,44 +47,44 @@ router.post("/", verifyToken, async (req, res) => {
 // UPDATE game
 router.put("/:gameId", verifyToken, async (req, res) => {
   try {
-    const game = await Game.findById(req.params.gameId)
 
-    if (!game) return res.status(404).json({ message: "Game not found" })
-
-    if (game.author.toString() !== req.user._id) {
-      return res.status(403).json({ message: "Not your game" })
-    }
-
-    const updated = await Game.findByIdAndUpdate(
-      req.params.gameId,
+    const updatedGame = await Game.findOneAndUpdate(
+      {
+        _id: req.params.gameId,
+        author: req.user._id,
+      },
       req.body,
       { new: true }
     )
 
-    res.json(updated)
-  } 
+    if (!updatedGame) {
+      return res.status(404).json({
+        message: "Game not found",
+      })
+    }
+    res.json(updatedGame)
+  }
   catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(500).json(err)
   }
 })
 
 // DELETE game
 router.delete("/:gameId", verifyToken, async (req, res) => {
   try {
-    const game = await Game.findById(req.params.gameId)
-
-    if (!game) return res.status(404).json({ message: "Game not found" })
-
-    if (game.author.toString() !== req.user._id) {
-      return res.status(403).json({ message: "Not your game" })
+    const deletedGame = await Game.findOneAndDelete({
+      _id: req.params.gameId,
+      author: req.user._id,
+    })
+    if (!deletedGame) {
+      return res.status(404).json({
+        message: "Game not found",
+      })
     }
-
-    await game.deleteOne()
-
-    res.json({ message: "Game deleted" })
+    res.json(deletedGame)
   }
   catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(500).json(err)
   }
 })
 
