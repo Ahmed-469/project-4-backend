@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(logger('dev'));
 
 // Routes go here
-app.use('/users', authRouter);
+app.use('/auth', authRouter);
 app.use('/games', gameRouter);
 app.use('/games', reviewRouter);
 
