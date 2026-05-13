@@ -3,21 +3,6 @@ const router = express.Router();
 const verifyToken = require('../middleware/verify-token');
 const Game = require('../models/Game');
 
-// GET all reviews for a game (everyone - no auth needed)
-router.get('/:gameId/reviews', async (req, res) => {
-  try {
-    const game = await Game.findById(req.params.gameId).populate('reviews.author', 'username');
-    
-    if (!game) {
-      return res.status(404).json({ error: 'Game not found' });
-    }
-    
-    res.json(game.reviews);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to get reviews' });
-  }
-});
-
 // CREATE review (logged in users)
 router.post('/:gameId/reviews', verifyToken, async (req, res) => {
   try {
